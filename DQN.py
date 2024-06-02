@@ -2,7 +2,7 @@ import torch
 import numpy as np
 
 from Net import Net
-from params import MEMORY_CAPACITY, NUM_STATES, BATCH_SIZE, Q_NETWORK_ITERATION
+from params import MEMORY_CAPACITY, NUM_STATES, BATCH_SIZE, Q_NETWORK_ITERATION, DEVICE
 
 
 class DQN():
@@ -11,16 +11,36 @@ class DQN():
         self.eval_net = Net()
         self.target_net = Net()  # We need a target_net for stable evaluation.
 
+        self.eval_net.to(DEVICE)
+        self.target_net.to(DEVICE).eval()
+
         self.learn_step_counter = 0
         self.memory_counter = 0
         self.memory = np.zeros((MEMORY_CAPACITY, NUM_STATES * 2 + 2))
 
         # Define the self.optimizer and self.loss_func:
 
-    def act(self, state):
-        state = torch.unsqueeze(torch.FloatTensor(state), 0)  # get a 1D array
+    def choose_action(self, state):
+        # todo: epsilon-strategy here
+
         # Write your code for an epsilon-greedy exploration.
         # With probability 1-EPISILON choose a random action.
+        return self.act(state)
+
+    @torch.no_grad()
+    def act(
+            self,
+            state: np.ndarray
+    ):
+        self.eval_net.eval()
+
+        tensor_state = torch.FloatTensor(state).to(DEVICE)  # 1D array (state of 4 params)
+        action_q_values = self.eval_net(tensor_state)
+        action = torch.argmax(action_q_values).item()  # 0 or 1
+
+        self.eval_net.train()
+
+        return action
 
     def store_transition(self, state, action, reward, next_state):
         transition = np.hstack((state, [action, reward], next_state))

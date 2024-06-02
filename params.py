@@ -12,3 +12,5 @@ env = env.unwrapped
 NUM_ACTIONS = env.action_space.n
 NUM_STATES = env.observation_space.shape[0]
 ENV_A_SHAPE = 0 if isinstance(env.action_space.sample(), int) else env.action_space.sample.shape
+
+DEVICE = 'mps'
