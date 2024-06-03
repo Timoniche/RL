@@ -1,7 +1,7 @@
 import torch
 import numpy as np
 
-from Net import Net
+from net import Net
 from params import MEMORY_CAPACITY, NUM_STATES, BATCH_SIZE, Q_NETWORK_ITERATION, DEVICE
 
 

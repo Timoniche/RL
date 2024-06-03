@@ -1,4 +1,4 @@
-from DQN import DQN
+from dqn import DQN
 from params import env, MEMORY_CAPACITY
 
 
@@ -13,7 +13,7 @@ def train():
         while True:
             env.render()
             action = dqn.choose_action(state[0])
-            next_state, reward, done, info = env.step(action)
+            next_state, reward, done, _, _ = env.step(action)
 
             dqn.store_transition(state, action, reward, next_state)
             ep_reward += reward

@@ -7,6 +7,8 @@ EPISILON = 0.9
 MEMORY_CAPACITY = 20000  # NB: could be increased
 Q_NETWORK_ITERATION = 100
 
+# todo: deprecated, change to v1(?)
+# https://github.com/openai/gym/wiki/CartPole-v0
 env = gym.make("CartPole-v0")
 env = env.unwrapped
 NUM_ACTIONS = env.action_space.n
