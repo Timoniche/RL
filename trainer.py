@@ -18,7 +18,7 @@ def train():
             dqn.store_transition(state, action, reward, next_state)
             ep_reward += reward
 
-            if dqn.memory_counter >= MEMORY_CAPACITY:
+            if len(dqn) >= MEMORY_CAPACITY:
                 dqn.learn()
                 if done:
                     print("episode: {} , the episode reward is {}".format(i, round(ep_reward, 3)))

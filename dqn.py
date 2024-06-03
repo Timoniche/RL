@@ -1,6 +1,7 @@
 import torch
 import numpy as np
 
+from memory import Memory
 from net import Net
 from params import MEMORY_CAPACITY, NUM_STATES, BATCH_SIZE, Q_NETWORK_ITERATION, DEVICE
 
@@ -9,14 +10,13 @@ class DQN():
     def __init__(self):
         super(DQN, self).__init__()
         self.eval_net = Net()
-        self.target_net = Net()  # We need a target_net for stable evaluation.
+        self.target_net = Net()  # NB: We need a target_net for stable evaluation.
 
         self.eval_net.to(DEVICE)
         self.target_net.to(DEVICE).eval()
 
         self.learn_step_counter = 0
-        self.memory_counter = 0
-        self.memory = np.zeros((MEMORY_CAPACITY, NUM_STATES * 2 + 2))
+        self.memory = Memory(capacity=MEMORY_CAPACITY)
 
         # Define the self.optimizer and self.loss_func:
 
@@ -43,10 +43,7 @@ class DQN():
         return action
 
     def store_transition(self, state, action, reward, next_state):
-        transition = np.hstack((state, [action, reward], next_state))
-        index = self.memory_counter % MEMORY_CAPACITY
-        self.memory[index, :] = transition
-        self.memory_counter += 1
+        self.memory.push(state, action, reward, next_state)
 
     def update(self):
         # sample batch from memory
