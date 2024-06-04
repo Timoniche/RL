@@ -19,7 +19,7 @@ def train(dqn: DQN):
             # reward type:  <class 'float'>
             # done type:  <class 'bool'>
 
-            dqn.store_transition(state, action, reward, next_state)
+            dqn.store_transition(state, action, reward, next_state, done)
             episode_reward += reward
 
             if dqn.ready_to_learn():

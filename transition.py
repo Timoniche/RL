@@ -7,5 +7,6 @@ Transition = namedtuple(
         'action',
         'reward',
         'next_state',
+        'done',
     ]
 )
