@@ -1,7 +1,8 @@
 import gym
 
 BATCH_SIZE = 128
-LR = 0.01
+# LR = 0.01
+LR = 1e-4
 GAMMA = 0.90
 EPISILON = 0.9
 MEMORY_CAPACITY = 20000  # NB: could be increased

@@ -1,9 +1,10 @@
 import torch
 import numpy as np
+import torch.nn as nn
 
 from memory import Memory
 from net import Net
-from params import MEMORY_CAPACITY, BATCH_SIZE, Q_NETWORK_ITERATION, DEVICE, GAMMA
+from params import MEMORY_CAPACITY, BATCH_SIZE, Q_NETWORK_ITERATION, DEVICE, GAMMA, LR
 from transition import Transition
 
 
@@ -19,7 +20,9 @@ class DQN:
         self.learn_step_counter = 0
         self.memory = Memory(capacity=MEMORY_CAPACITY)
 
-        # Define the self.optimizer and self.loss_func:
+        # Defining the self.optimizer and self.loss_func:
+        self.criterion = nn.MSELoss()
+        self.optimizer = torch.optim.Adam(self.eval_net.parameters(), lr=LR)
 
     def ready_to_learn(self):
         return self.memory.ready_to_sample()
@@ -74,7 +77,19 @@ class DQN:
                     q_next[i] = 0.0
             y_target = rewards + GAMMA * q_next
 
+        self._backprop(q_predict, y_target)
+
         # updating the target network parameters
         if self.learn_step_counter % Q_NETWORK_ITERATION == 0:
             self.target_net.load_state_dict(self.eval_net.state_dict())
         self.learn_step_counter += 1
+
+    def _backprop(
+            self,
+            q_predict: torch.Tensor,
+            y_target: torch.Tensor,
+    ):
+        loss = self.criterion(q_predict, y_target)
+        self.optimizer.zero_grad()
+        loss.backward()
+        self.optimizer.step()
