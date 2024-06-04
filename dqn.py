@@ -11,7 +11,7 @@ from transition import Transition
 class DQN:
     def __init__(self):
         super(DQN, self).__init__()
-        self.eval_net = Net()
+        self.eval_net = Net().train()
         self.target_net = Net()  # NB: We need a target_net for stable evaluation.
 
         self.eval_net.to(DEVICE)
@@ -39,13 +39,15 @@ class DQN:
             self,
             state: np.ndarray
     ):
+        was_training = self.eval_net.training
         self.eval_net.eval()
 
         tensor_state = torch.FloatTensor(state).to(DEVICE)  # 1D array (state of 4 params)
         action_q_values = self.eval_net(tensor_state)
         action = torch.argmax(action_q_values).item()  # 0 or 1
 
-        self.eval_net.train()
+        if was_training:
+            self.eval_net.train()
 
         return action
 
