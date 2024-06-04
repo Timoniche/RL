@@ -4,7 +4,7 @@ import torch.nn as nn
 
 from memory import Memory
 from net import Net
-from params import MEMORY_CAPACITY, BATCH_SIZE, Q_NETWORK_ITERATION, DEVICE, GAMMA, LR
+from params import MEMORY_CAPACITY, BATCH_SIZE, Q_NETWORK_ITERATION, DEVICE, GAMMA, LR, EPSILON
 from transition import Transition
 
 
@@ -27,11 +27,11 @@ class DQN:
     def ready_to_learn(self):
         return self.memory.ready_to_sample()
 
-    def choose_action(self, state):
-        # todo: epsilon-strategy here
-
-        # Write your code for an epsilon-greedy exploration.
-        # With probability 1-EPISILON choose a random action.
+    def choose_action(self, state, env):
+        # Code for an epsilon-greedy exploration.
+        # With probability 1-EPSILON choose a random action.
+        if np.random.random() < 1 - EPSILON:
+            return env.action_space.sample()
         return self.act(state)
 
     @torch.no_grad()

@@ -10,7 +10,7 @@ def record_video(dqn: DQN, environment):
     total_reward = 0
     while True:
         # environment.render()
-        action = dqn.choose_action(state)
+        action = dqn.act(state)
         next_state, reward, done, _, _ = environment.step(action)
         total_reward += 1
         state = next_state
