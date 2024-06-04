@@ -19,7 +19,6 @@ class EpsilonExploration:
 
     def decay_step(self):
         self.epsilon = self.epsilon * self.decay
-        print("Epsilon: {}".format(self.epsilon))
 
     def exploring(self):
         return np.random.random() < self.epsilon
