@@ -3,7 +3,7 @@ import numpy as np
 
 from memory import Memory
 from net import Net
-from params import MEMORY_CAPACITY, BATCH_SIZE, Q_NETWORK_ITERATION, DEVICE
+from params import MEMORY_CAPACITY, BATCH_SIZE, Q_NETWORK_ITERATION, DEVICE, GAMMA
 from transition import Transition
 
 
@@ -55,6 +55,7 @@ class DQN:
 
         states = torch.FloatTensor(np.array(states)).to(DEVICE)
         next_states = torch.FloatTensor(np.array(next_states)).to(DEVICE)
+        rewards = torch.FloatTensor(np.array(rewards)).to(DEVICE)
 
         return states, actions, rewards, next_states, dones
 
@@ -71,6 +72,7 @@ class DQN:
             for i in range(len(dones)):
                 if dones[i]:
                     q_next[i] = 0.0
+            y_target = rewards + GAMMA * q_next
 
         # updating the target network parameters
         if self.learn_step_counter % Q_NETWORK_ITERATION == 0:
