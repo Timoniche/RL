@@ -1,9 +1,9 @@
 from dqn import DQN
-from params import env, MEMORY_CAPACITY
+from params import env
+from video_recorder import record_video
 
 
-def train():
-    dqn = DQN()
+def train(dqn: DQN):
     episodes = 400
     print("Need to collect (actions, states, rewards, next_statex)....")
     for i in range(episodes):
@@ -28,7 +28,9 @@ def train():
 
 
 def main():
-    train()
+    dqn = DQN()
+    train(dqn)
+    record_video(dqn, env)
 
 
 if __name__ == '__main__':

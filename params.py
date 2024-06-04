@@ -9,7 +9,7 @@ Q_NETWORK_ITERATION = 100
 
 # todo: deprecated, change to v1(?)
 # https://github.com/openai/gym/wiki/CartPole-v0
-env = gym.make("CartPole-v0")
+env = gym.make("CartPole-v0", render_mode="rgb_array")
 env = env.unwrapped
 NUM_ACTIONS = env.action_space.n
 NUM_STATES = env.observation_space.shape[0]

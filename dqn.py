@@ -49,10 +49,10 @@ class DQN:
         self.memory.push(state, action, reward, next_state)
 
     def learn(self):
-        states, actions, rewards, next_states = self.memory.sample(batch_size=BATCH_SIZE)
+        # states, actions, rewards, next_states = self.memory.sample(batch_size=BATCH_SIZE)
 
         # code for the q-learning update
-        q_predict = self.eval_net(states)
+        # q_predict = self.eval_net(states)
 
         # updating the target network parameters
         if self.learn_step_counter % Q_NETWORK_ITERATION == 0:
