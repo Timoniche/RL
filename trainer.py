@@ -15,6 +15,10 @@ def train(dqn: DQN):
             action = dqn.choose_action(state)
             next_state, reward, done, _, _ = env.step(action)
 
+            # state type:  <class 'numpy.ndarray'>
+            # reward type:  <class 'float'>
+            # done type:  <class 'bool'>
+
             dqn.store_transition(state, action, reward, next_state)
             episode_reward += reward
 
@@ -30,7 +34,7 @@ def train(dqn: DQN):
 def main():
     dqn = DQN()
     train(dqn)
-    record_video(dqn, env)
+    # record_video(dqn, env)
 
 
 if __name__ == '__main__':

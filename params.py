@@ -5,6 +5,7 @@ LR = 0.01
 GAMMA = 0.90
 EPISILON = 0.9
 MEMORY_CAPACITY = 20000  # NB: could be increased
+SAMPLE_FROM = 1000
 Q_NETWORK_ITERATION = 100
 
 # todo: deprecated, change to v1(?)
