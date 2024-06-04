@@ -3,10 +3,10 @@ import numpy as np
 
 from memory import Memory
 from net import Net
-from params import MEMORY_CAPACITY, NUM_STATES, BATCH_SIZE, Q_NETWORK_ITERATION, DEVICE
+from params import MEMORY_CAPACITY, BATCH_SIZE, Q_NETWORK_ITERATION, DEVICE
 
 
-class DQN():
+class DQN:
     def __init__(self):
         super(DQN, self).__init__()
         self.eval_net = Net()
@@ -19,6 +19,9 @@ class DQN():
         self.memory = Memory(capacity=MEMORY_CAPACITY)
 
         # Define the self.optimizer and self.loss_func:
+
+    def ready_to_learn(self):
+        return len(self.memory) >= MEMORY_CAPACITY
 
     def choose_action(self, state):
         # todo: epsilon-strategy here
@@ -45,18 +48,13 @@ class DQN():
     def store_transition(self, state, action, reward, next_state):
         self.memory.push(state, action, reward, next_state)
 
-    def update(self):
-        # sample batch from memory
-        sample_index = np.random.choice(MEMORY_CAPACITY, BATCH_SIZE)
-        batch_memory = self.memory[sample_index, :]
-        batch_state = torch.FloatTensor(batch_memory[:, :NUM_STATES])
-        batch_action = torch.LongTensor(batch_memory[:, NUM_STATES:NUM_STATES + 1].astype(int))
-        batch_reward = torch.FloatTensor(batch_memory[:, NUM_STATES + 1:NUM_STATES + 2])
-        batch_next_state = torch.FloatTensor(batch_memory[:, -NUM_STATES:])
+    def learn(self):
+        states, actions, rewards, next_states = self.memory.sample(batch_size=BATCH_SIZE)
 
-        # Write your code for the q-learning update
+        # code for the q-learning update
+        q_predict = self.eval_net(states)
 
-        # update the target network parameters
+        # updating the target network parameters
         if self.learn_step_counter % Q_NETWORK_ITERATION == 0:
             self.target_net.load_state_dict(self.eval_net.state_dict())
         self.learn_step_counter += 1
