@@ -4,8 +4,25 @@ import torch.nn as nn
 
 from memory import Memory
 from net import Net
-from params import MEMORY_CAPACITY, BATCH_SIZE, Q_NETWORK_ITERATION, DEVICE, GAMMA, LR, EPSILON
+from params import MEMORY_CAPACITY, BATCH_SIZE, Q_NETWORK_ITERATION, DEVICE, GAMMA, LR, DECAY, START_EPSILON
 from transition import Transition
+
+
+class EpsilonExploration:
+    def __init__(
+            self,
+            start_epsilon: float = START_EPSILON,
+            decay: float = DECAY,
+    ):
+        self.epsilon = start_epsilon
+        self.decay = decay
+
+    def decay_step(self):
+        self.epsilon = self.epsilon * self.decay
+        print("Epsilon: {}".format(self.epsilon))
+
+    def exploring(self):
+        return np.random.random() < self.epsilon
 
 
 class DQN:
@@ -19,6 +36,7 @@ class DQN:
 
         self.learn_step_counter = 0
         self.memory = Memory(capacity=MEMORY_CAPACITY)
+        self.exploration = EpsilonExploration()
 
         # Defining the self.optimizer and self.loss_func:
         self.criterion = nn.MSELoss()
@@ -29,10 +47,12 @@ class DQN:
 
     def choose_action(self, state, env):
         # Code for an epsilon-greedy exploration.
-        # With probability 1-EPSILON choose a random action.
-        if np.random.random() < 1 - EPSILON:
+        if self.exploration.exploring():
             return env.action_space.sample()
         return self.act(state)
+
+    def reduce_exploration_temperature(self):
+        self.exploration.decay_step()
 
     @torch.no_grad()
     def act(

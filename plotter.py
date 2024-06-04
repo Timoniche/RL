@@ -17,8 +17,9 @@ def plot_losses(rewards):
     plt.show()
 
 
-rewards_filename = 'metrics/rewards_2024_06_05_02_29.txt'
-losses_filename = 'metrics/losses_2024_06_05_02_29.txt'
+timeid = '2024_06_05_02_52'
+rewards_filename = f'metrics/rewards_{timeid}.txt'
+losses_filename = f'metrics/losses_{timeid}.txt'
 
 
 def read_floats(filename):

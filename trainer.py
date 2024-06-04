@@ -33,6 +33,7 @@ def train(dqn: DQN):
 
             dqn.store_transition(state, action, reward, next_state, done)
             episode_reward += reward
+            dqn.reduce_exploration_temperature()
 
             if dqn.ready_to_learn():
                 loss = dqn.learn()
