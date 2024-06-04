@@ -77,12 +77,14 @@ class DQN:
                     q_next[i] = 0.0
             y_target = rewards + GAMMA * q_next
 
-        self._backprop(q_predict, y_target)
+        loss = self._backprop(q_predict, y_target)
 
         # updating the target network parameters
         if self.learn_step_counter % Q_NETWORK_ITERATION == 0:
             self.target_net.load_state_dict(self.eval_net.state_dict())
         self.learn_step_counter += 1
+
+        return loss
 
     def _backprop(
             self,
@@ -93,3 +95,5 @@ class DQN:
         self.optimizer.zero_grad()
         loss.backward()
         self.optimizer.step()
+
+        return loss
