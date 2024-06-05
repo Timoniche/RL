@@ -42,7 +42,7 @@ class DQN:
 
         # Defining the self.optimizer and self.loss_func:
         self.criterion = nn.MSELoss()
-        self.optimizer = torch.optim.AdamW(self.eval_net.parameters(), lr=LR)
+        self.optimizer = torch.optim.AdamW(self.eval_net.parameters(), lr=LR, amsgrad=True)
 
     def ready_to_learn(self):
         return self.memory.ready_to_sample()

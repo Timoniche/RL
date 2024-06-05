@@ -17,7 +17,7 @@ def plot_losses(rewards):
     plt.show()
 
 
-timeid = '2024_06_05_03_21'
+timeid = '2024_06_05_03_29'
 rewards_filename = f'metrics/rewards_{timeid}.txt'
 losses_filename = f'metrics/losses_{timeid}.txt'
 
