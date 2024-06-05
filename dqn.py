@@ -4,7 +4,8 @@ import torch.nn as nn
 
 from memory import Memory
 from net import Net
-from params import MEMORY_CAPACITY, BATCH_SIZE, Q_NETWORK_ITERATION, DEVICE, GAMMA, LR, DECAY, START_EPSILON
+from params import MEMORY_CAPACITY, BATCH_SIZE, Q_NETWORK_ITERATION, DEVICE, GAMMA, LR, DECAY, START_EPSILON, \
+    MIN_EPSILON
 from transition import Transition
 
 
@@ -12,13 +13,15 @@ class EpsilonExploration:
     def __init__(
             self,
             start_epsilon: float = START_EPSILON,
+            min_epsilon: float = MIN_EPSILON,
             decay: float = DECAY,
     ):
         self.epsilon = start_epsilon
+        self.min_epsilon = min_epsilon
         self.decay = decay
 
     def decay_step(self):
-        self.epsilon = self.epsilon * self.decay
+        self.epsilon = max(self.min_epsilon, self.epsilon * self.decay)
 
     def exploring(self):
         return np.random.random() < self.epsilon
@@ -39,7 +42,7 @@ class DQN:
 
         # Defining the self.optimizer and self.loss_func:
         self.criterion = nn.MSELoss()
-        self.optimizer = torch.optim.Adam(self.eval_net.parameters(), lr=LR)
+        self.optimizer = torch.optim.AdamW(self.eval_net.parameters(), lr=LR)
 
     def ready_to_learn(self):
         return self.memory.ready_to_sample()
