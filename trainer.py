@@ -18,7 +18,7 @@ def save_metrics(
 
 
 def train(dqn: DQN):
-    episodes = 400
+    episodes = 385
     print("Need to collect (actions, states, rewards, next_statex)....")
     rewards = []
     episode_losses = []
@@ -57,7 +57,7 @@ def train(dqn: DQN):
 def main():
     dqn = DQN()
     train(dqn)
-    # record_video(dqn, env)
+    record_video(dqn, env)
 
 
 if __name__ == '__main__':
