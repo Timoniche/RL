@@ -17,7 +17,10 @@ def save_metrics(
             f.write(f'{r} ')
 
 
-def train(dqn: DQN):
+def train(
+        dqn: DQN,
+        wandbrun,
+):
     episodes = 385
     print("Need to collect (actions, states, rewards, next_statex)....")
     rewards = []
@@ -45,10 +48,14 @@ def train(dqn: DQN):
             state = next_state
         rewards.append(episode_reward)
         if len(losses) == 0:
+            episode_mean_loss = 0
             episode_losses.append(0)
         else:
             losses = list(map(lambda tensor: tensor.item(), losses))
-            episode_losses.append(mean(losses))
+            episode_mean_loss = mean(losses)
+            episode_losses.append(episode_mean_loss)
+        if wandbrun is not None:
+            wandbrun.log({'loss': episode_mean_loss, 'reward': episode_reward})
 
     save_metrics(rewards, nameprefix='rewards')
     save_metrics(episode_losses, nameprefix='losses')
@@ -56,7 +63,7 @@ def train(dqn: DQN):
 
 def main():
     dqn = DQN()
-    train(dqn)
+    train(dqn, wandbrun=None)
     record_video(dqn, env)
 
 
